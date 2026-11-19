@@ -1,0 +1,734 @@
+{
+  "candidate_status_counts": {
+    "error": 0,
+    "fail": 1,
+    "pass": 1,
+    "pending": 1
+  },
+  "candidates": [
+    {
+      "candidate_id": "synthetic-valid",
+      "cost": {
+        "budget": {
+          "budget_minor": "26",
+          "currency": "XCR",
+          "status": "pass",
+          "total_known_plus_fixed_minor": "26"
+        },
+        "currencies": {
+          "XCR": {
+            "cost_status": "complete",
+            "fixed_cost_known_minor": "2",
+            "item_cost_known_minor": "24",
+            "total_known_minor": "26",
+            "unknown_item_ids": []
+          }
+        },
+        "declared_comparisons": [
+          {
+            "currency": "XCR",
+            "declared_total_minor": "26",
+            "expected_total_known_minor": "26",
+            "status": "matched"
+          }
+        ],
+        "items": [
+          {
+            "billed_quantity": "4",
+            "billing_basis": "net_of_known_stock_with_explicit_pack",
+            "capacity": null,
+            "capacity_margin": null,
+            "capacity_margin_basis": "capacity - quantity in the declared cost-item unit; arithmetic only",
+            "capacity_measurement_source": "source on this cost item; locator/raw/integrity checks do not prove semantic support",
+            "capacity_status": "not_applicable",
+            "charge_quantity": "4",
+            "currency": "XCR",
+            "declared_total_minor": "24",
+            "declared_total_status": "matched",
+            "deficit_status": "known",
+            "fixed_cost_minor": "2",
+            "gross_price_status": "complete",
+            "id": "synthetic-packed-consumable",
+            "item_cost_minor": "24",
+            "item_cost_status": "known",
+            "pack_rounded_gross_cost_minor": "24",
+            "pack_size": "2",
+            "packs": 2,
+            "quantity": "5",
+            "shortfall": "4",
+            "source": {
+              "file": "synthetic-self",
+              "integrity_status": "not_checked",
+              "locator_status": "resolved",
+              "path_scope": "source_root",
+              "raw_status": "matched",
+              "registry_id": "synthetic-self",
+              "semantic_support": "not_assessed",
+              "status": "pass"
+            },
+            "stock_available": "1",
+            "stock_role": "purchase",
+            "stock_role_status": "valid",
+            "stock_status": "known",
+            "unit": "synthetic_piece",
+            "unit_price_minor": "6"
+          }
+        ],
+        "rules": {
+          "budget": "pass only when complete comparable known total plus fixed charges is <= budget; known total above budget fails even with unknown lines",
+          "candidate_total": "sum known billed_quantity*unit_price_minor item costs per currency + all known fixed charges",
+          "capacity": "Capacity is a usage limit, never a procurement deduction. packs=ceil(quantity/pack_size), item_cost=billed*unit_price_minor, capacity_margin=stock_available-quantity; quantity>capacity fails while known gross cost remains reportable.",
+          "capacity_unknown": "Known all-consumption gross price remains complete while capacity availability is independently pending.",
+          "legacy_unspecified": "Preserve pre-stock_role behavior: purchase-style shortfall and billed*unit_price_minor; missing stock keeps cost/deficit completeness pending.",
+          "purchase": "Pre-owned stock is explicit: shortfall=max(0,quantity-stock) is procurement need only, packs=ceil(shortfall/pack_size), billed=packs*pack_size, and item_cost=billed*unit_price_minor. shortfall is never the pack-priced charge quantity; pack_rounded_gross_cost_minor repeats this same conservative cost for report compatibility."
+        }
+      },
+      "issues": [],
+      "machine_pass": true,
+      "machine_status": "pass",
+      "metrics": {
+        "synthetic_duration": {
+          "numeric": "10",
+          "status": "numeric",
+          "value": "10"
+        }
+      },
+      "parameters": [
+        {
+          "canonical_value": "2",
+          "domain": {
+            "allowed_values": [
+              "1",
+              "2",
+              "3"
+            ],
+            "closed_endpoints": null,
+            "count": 3,
+            "finite": true,
+            "kind": "explicit_numeric",
+            "step_rule": null
+          },
+          "domain_id": "synthetic-valid/parameter/synthetic_level",
+          "membership": "pass",
+          "name": "synthetic_level",
+          "normalization": {
+            "source": null,
+            "status": "not_provided"
+          },
+          "source": {
+            "file": "synthetic-self",
+            "integrity_status": "not_checked",
+            "locator_status": "resolved",
+            "path_scope": "source_root",
+            "raw_status": "matched",
+            "registry_id": "synthetic-self",
+            "semantic_support": "not_assessed",
+            "status": "pass"
+          },
+          "source_dimension": {
+            "declared_unit": "synthetic_unit",
+            "source_unit": null,
+            "status": "declared_only"
+          },
+          "unit": "synthetic_unit",
+          "value": "2"
+        }
+      ],
+      "parent_id": null,
+      "pending_experts": [],
+      "schedule": {
+        "horizon_audit": {
+          "horizon_minutes": "10",
+          "reason": "no_tasks",
+          "status": "not_applicable",
+          "time_basis": "numeric minutes from the common planning origin; every task end must be <= horizon_minutes"
+        },
+        "reason": "no_tasks",
+        "status": "not_applicable",
+        "tasks": [],
+        "violations": []
+      },
+      "scientific_checks": [
+        {
+          "affected_steps": [],
+          "claim": "Synthetic review assertion used only to demonstrate schema flow.",
+          "declared_status": "pass",
+          "effective_status": "pass",
+          "expert_role": null,
+          "id": "synthetic-scientific-review",
+          "reason": "Synthetic declared review outcome; semantic support is not independently machine-verified.",
+          "semantic_support": "not_independently_verified",
+          "source": {
+            "file": "synthetic-self",
+            "integrity_status": "not_checked",
+            "locator_status": "resolved",
+            "path_scope": "source_root",
+            "raw_status": "matched",
+            "registry_id": "synthetic-self",
+            "semantic_support": "not_assessed",
+            "status": "pass"
+          }
+        }
+      ],
+      "scientific_readiness": "pass",
+      "scientific_semantics_independently_verified": false,
+      "source_summary": {
+        "fail": 0,
+        "not_provided": 0,
+        "pass": 3,
+        "pending": 0
+      },
+      "status": "pass",
+      "tasks": []
+    },
+    {
+      "candidate_id": "synthetic-invalid-domain-and-cost",
+      "cost": {
+        "budget": {
+          "budget_minor": "20",
+          "currency": "XCR",
+          "status": "fail",
+          "total_known_plus_fixed_minor": "26"
+        },
+        "currencies": {
+          "XCR": {
+            "cost_status": "complete",
+            "fixed_cost_known_minor": "2",
+            "item_cost_known_minor": "24",
+            "total_known_minor": "26",
+            "unknown_item_ids": []
+          }
+        },
+        "declared_comparisons": [
+          {
+            "currency": "XCR",
+            "declared_total_minor": "22",
+            "expected_total_known_minor": "26",
+            "status": "mismatched"
+          }
+        ],
+        "items": [
+          {
+            "billed_quantity": "4",
+            "billing_basis": "net_of_known_stock_with_explicit_pack",
+            "capacity": null,
+            "capacity_margin": null,
+            "capacity_margin_basis": "capacity - quantity in the declared cost-item unit; arithmetic only",
+            "capacity_measurement_source": "source on this cost item; locator/raw/integrity checks do not prove semantic support",
+            "capacity_status": "not_applicable",
+            "charge_quantity": "4",
+            "currency": "XCR",
+            "declared_total_minor": "20",
+            "declared_total_status": "mismatched",
+            "deficit_status": "known",
+            "fixed_cost_minor": "2",
+            "gross_price_status": "complete",
+            "id": "synthetic-packed-consumable",
+            "item_cost_minor": "24",
+            "item_cost_status": "known",
+            "pack_rounded_gross_cost_minor": "24",
+            "pack_size": "2",
+            "packs": 2,
+            "quantity": "5",
+            "shortfall": "4",
+            "source": {
+              "file": "synthetic-self",
+              "integrity_status": "not_checked",
+              "locator_status": "resolved",
+              "path_scope": "source_root",
+              "raw_status": "matched",
+              "registry_id": "synthetic-self",
+              "semantic_support": "not_assessed",
+              "status": "pass"
+            },
+            "stock_available": "1",
+            "stock_role": "purchase",
+            "stock_role_status": "valid",
+            "stock_status": "known",
+            "unit": "synthetic_piece",
+            "unit_price_minor": "6"
+          }
+        ],
+        "rules": {
+          "budget": "pass only when complete comparable known total plus fixed charges is <= budget; known total above budget fails even with unknown lines",
+          "candidate_total": "sum known billed_quantity*unit_price_minor item costs per currency + all known fixed charges",
+          "capacity": "Capacity is a usage limit, never a procurement deduction. packs=ceil(quantity/pack_size), item_cost=billed*unit_price_minor, capacity_margin=stock_available-quantity; quantity>capacity fails while known gross cost remains reportable.",
+          "capacity_unknown": "Known all-consumption gross price remains complete while capacity availability is independently pending.",
+          "legacy_unspecified": "Preserve pre-stock_role behavior: purchase-style shortfall and billed*unit_price_minor; missing stock keeps cost/deficit completeness pending.",
+          "purchase": "Pre-owned stock is explicit: shortfall=max(0,quantity-stock) is procurement need only, packs=ceil(shortfall/pack_size), billed=packs*pack_size, and item_cost=billed*unit_price_minor. shortfall is never the pack-priced charge quantity; pack_rounded_gross_cost_minor repeats this same conservative cost for report compatibility."
+        }
+      },
+      "issues": [
+        {
+          "code": "PARAMETER_OUT_OF_DOMAIN",
+          "kind": "validation",
+          "message": "The value is outside the explicit set, outside the closed interval, or off the exact origin+k*step grid; it was not clamped.",
+          "path": "/candidates/1/parameters/0/value",
+          "scope": "machine"
+        },
+        {
+          "code": "DECLARED_ITEM_COST_MISMATCH",
+          "kind": "validation",
+          "message": "The declared item total differs from billed_quantity*unit_price_minor using exact arithmetic; shortfall is diagnostic and is not substituted for the billed pack quantity.",
+          "path": "/candidates/1/cost_items/0/declared_total_minor",
+          "scope": "machine"
+        },
+        {
+          "code": "DECLARED_CANDIDATE_TOTAL_MISMATCH",
+          "kind": "validation",
+          "message": "The declared candidate total differs from exact known item costs plus fixed charges for this currency.",
+          "path": "/candidates/1/declared_totals_minor/XCR",
+          "scope": "machine"
+        },
+        {
+          "code": "BUDGET_EXCEEDED",
+          "kind": "validation",
+          "message": "Known item costs plus fixed charges already exceed the budget; unknown lines cannot compensate.",
+          "path": "/candidates/1/budget_minor",
+          "scope": "machine"
+        }
+      ],
+      "machine_pass": false,
+      "machine_status": "fail",
+      "metrics": {
+        "synthetic_duration": {
+          "numeric": "8",
+          "status": "numeric",
+          "value": "8"
+        }
+      },
+      "parameters": [
+        {
+          "canonical_value": "4",
+          "domain": {
+            "allowed_values": [
+              "1",
+              "2",
+              "3"
+            ],
+            "closed_endpoints": null,
+            "count": 3,
+            "finite": true,
+            "kind": "explicit_numeric",
+            "step_rule": null
+          },
+          "domain_id": "synthetic-invalid-domain-and-cost/parameter/synthetic_level",
+          "membership": "fail",
+          "name": "synthetic_level",
+          "normalization": {
+            "source": null,
+            "status": "not_provided"
+          },
+          "source": {
+            "file": "synthetic-self",
+            "integrity_status": "not_checked",
+            "locator_status": "resolved",
+            "path_scope": "source_root",
+            "raw_status": "matched",
+            "registry_id": "synthetic-self",
+            "semantic_support": "not_assessed",
+            "status": "pass"
+          },
+          "source_dimension": {
+            "declared_unit": "synthetic_unit",
+            "source_unit": null,
+            "status": "declared_only"
+          },
+          "unit": "synthetic_unit",
+          "value": "4"
+        }
+      ],
+      "parent_id": "synthetic-valid",
+      "pending_experts": [],
+      "schedule": {
+        "horizon_audit": {
+          "horizon_minutes": "8",
+          "reason": "no_tasks",
+          "status": "not_applicable",
+          "time_basis": "numeric minutes from the common planning origin; every task end must be <= horizon_minutes"
+        },
+        "reason": "no_tasks",
+        "status": "not_applicable",
+        "tasks": [],
+        "violations": []
+      },
+      "scientific_checks": [
+        {
+          "affected_steps": [],
+          "claim": "Synthetic review assertion; this does not compensate arithmetic or domain failures.",
+          "declared_status": "pass",
+          "effective_status": "pass",
+          "expert_role": null,
+          "id": "synthetic-scientific-review",
+          "reason": "Synthetic declared review outcome only.",
+          "semantic_support": "not_independently_verified",
+          "source": {
+            "file": "synthetic-self",
+            "integrity_status": "not_checked",
+            "locator_status": "resolved",
+            "path_scope": "source_root",
+            "raw_status": "matched",
+            "registry_id": "synthetic-self",
+            "semantic_support": "not_assessed",
+            "status": "pass"
+          }
+        }
+      ],
+      "scientific_readiness": "pass",
+      "scientific_semantics_independently_verified": false,
+      "source_summary": {
+        "fail": 0,
+        "not_provided": 0,
+        "pass": 3,
+        "pending": 0
+      },
+      "status": "fail",
+      "tasks": []
+    },
+    {
+      "candidate_id": "synthetic-pending-schedule",
+      "cost": {
+        "budget": {
+          "budget_minor": "0",
+          "currency": "XCR",
+          "status": "pass",
+          "total_known_plus_fixed_minor": "0"
+        },
+        "currencies": {
+          "XCR": {
+            "cost_status": "complete",
+            "fixed_cost_known_minor": "0",
+            "item_cost_known_minor": "0",
+            "total_known_minor": "0",
+            "unknown_item_ids": []
+          }
+        },
+        "declared_comparisons": [
+          {
+            "currency": "XCR",
+            "declared_total_minor": "0",
+            "expected_total_known_minor": "0",
+            "status": "matched"
+          }
+        ],
+        "items": [
+          {
+            "billed_quantity": "0",
+            "billing_basis": "net_of_known_stock_without_pack",
+            "capacity": null,
+            "capacity_margin": null,
+            "capacity_margin_basis": "capacity - quantity in the declared cost-item unit; arithmetic only",
+            "capacity_measurement_source": "source on this cost item; locator/raw/integrity checks do not prove semantic support",
+            "capacity_status": "not_applicable",
+            "charge_quantity": "0",
+            "currency": "XCR",
+            "declared_total_minor": "0",
+            "declared_total_status": "matched",
+            "deficit_status": "known",
+            "fixed_cost_minor": "0",
+            "gross_price_status": "complete",
+            "id": "synthetic-in-stock-consumable",
+            "item_cost_minor": "0",
+            "item_cost_status": "known",
+            "pack_rounded_gross_cost_minor": "0",
+            "pack_size": null,
+            "packs": null,
+            "quantity": "2",
+            "shortfall": "0",
+            "source": {
+              "file": "synthetic-self",
+              "integrity_status": "not_checked",
+              "locator_status": "resolved",
+              "path_scope": "source_root",
+              "raw_status": "matched",
+              "registry_id": "synthetic-self",
+              "semantic_support": "not_assessed",
+              "status": "pass"
+            },
+            "stock_available": "2",
+            "stock_role": "purchase",
+            "stock_role_status": "valid",
+            "stock_status": "known",
+            "unit": "synthetic_piece",
+            "unit_price_minor": "8"
+          }
+        ],
+        "rules": {
+          "budget": "pass only when complete comparable known total plus fixed charges is <= budget; known total above budget fails even with unknown lines",
+          "candidate_total": "sum known billed_quantity*unit_price_minor item costs per currency + all known fixed charges",
+          "capacity": "Capacity is a usage limit, never a procurement deduction. packs=ceil(quantity/pack_size), item_cost=billed*unit_price_minor, capacity_margin=stock_available-quantity; quantity>capacity fails while known gross cost remains reportable.",
+          "capacity_unknown": "Known all-consumption gross price remains complete while capacity availability is independently pending.",
+          "legacy_unspecified": "Preserve pre-stock_role behavior: purchase-style shortfall and billed*unit_price_minor; missing stock keeps cost/deficit completeness pending.",
+          "purchase": "Pre-owned stock is explicit: shortfall=max(0,quantity-stock) is procurement need only, packs=ceil(shortfall/pack_size), billed=packs*pack_size, and item_cost=billed*unit_price_minor. shortfall is never the pack-priced charge quantity; pack_rounded_gross_cost_minor repeats this same conservative cost for report compatibility."
+        }
+      },
+      "issues": [
+        {
+          "code": "SCHEDULE_PENDING",
+          "kind": "pending",
+          "message": "The scheduler did not establish a complete feasible schedule.",
+          "path": "/candidates/2/tasks",
+          "scope": "machine"
+        }
+      ],
+      "machine_pass": false,
+      "machine_status": "pending",
+      "metrics": {
+        "synthetic_duration": {
+          "numeric": "7",
+          "status": "numeric",
+          "value": "7"
+        }
+      },
+      "parameters": [
+        {
+          "canonical_value": "3",
+          "domain": {
+            "allowed_values": [
+              "1",
+              "2",
+              "3"
+            ],
+            "closed_endpoints": null,
+            "count": 3,
+            "finite": true,
+            "kind": "explicit_numeric",
+            "step_rule": null
+          },
+          "domain_id": "synthetic-pending-schedule/parameter/synthetic_level",
+          "membership": "pass",
+          "name": "synthetic_level",
+          "normalization": {
+            "source": null,
+            "status": "not_provided"
+          },
+          "source": {
+            "file": "synthetic-self",
+            "integrity_status": "not_checked",
+            "locator_status": "resolved",
+            "path_scope": "source_root",
+            "raw_status": "matched",
+            "registry_id": "synthetic-self",
+            "semantic_support": "not_assessed",
+            "status": "pass"
+          },
+          "source_dimension": {
+            "declared_unit": "synthetic_unit",
+            "source_unit": null,
+            "status": "declared_only"
+          },
+          "unit": "synthetic_unit",
+          "value": "3"
+        }
+      ],
+      "parent_id": "synthetic-valid",
+      "pending_experts": [],
+      "schedule": {
+        "algorithm": "input-order-topological-serial-earliest-placement-v1",
+        "candidate_id": "synthetic-pending-schedule",
+        "checks": {
+          "calendars": "pass",
+          "capacity": "pass",
+          "complete": false,
+          "deadlines": "unknown",
+          "dependencies": "pass",
+          "independent_recheck_performed": true
+        },
+        "global_optimum_claimed": false,
+        "horizon_audit": {
+          "horizon_minutes": "7",
+          "reason": "a complete valid schedule has not been established",
+          "status": "not_checked",
+          "time_basis": "numeric minutes from the common planning origin; every task end must be <= horizon_minutes"
+        },
+        "limitations": [
+          "Prospective scenario audit only: no appointment is booked and external availability is not confirmed.",
+          "Input-order topological serial placement is deterministic and nonpreemptive; it is not a global optimum or global feasibility proof.",
+          "Missing or explicitly empty availability is unknown, never unlimited; no shifts, timezones, capacities, or durations are inferred.",
+          "Missing deadlines are not inferred, and no global ready-by-deadline claim is made for unbounded tasks.",
+          "Unbounded roots and iteration/time-limit exhaustion return unknown rather than proof of infeasibility.",
+          "At least one task has no deadline; its proposed completion is not a guarantee of timely readiness."
+        ],
+        "makespan": null,
+        "parent_id": "synthetic-valid",
+        "prospective_not_booked": true,
+        "returned_status": "unknown",
+        "schedule": [
+          {
+            "deadline": null,
+            "duration_minutes": null,
+            "earliest_start": null,
+            "end": null,
+            "path": "tasks[0]",
+            "placement": "unscheduled",
+            "prospective_not_booked": true,
+            "provided_start": null,
+            "resources": [],
+            "scheduled": false,
+            "start": null,
+            "task_id": "synthetic-awaiting-calendar",
+            "unit": "minutes"
+          }
+        ],
+        "schema_version": "1.0",
+        "search_complete": true,
+        "status": "pending",
+        "tasks": [
+          {
+            "deadline": null,
+            "duration_minutes": null,
+            "earliest_start": null,
+            "end": null,
+            "path": "tasks[0]",
+            "placement": "unscheduled",
+            "prospective_not_booked": true,
+            "provided_start": null,
+            "resources": [],
+            "scheduled": false,
+            "start": null,
+            "task_id": "synthetic-awaiting-calendar",
+            "unit": "minutes"
+          }
+        ],
+        "time_basis": {
+          "arithmetic": "exact_fraction_minutes",
+          "intervals": "half_open_[start,end)",
+          "iso_normalization": "UTC",
+          "numeric_output_origin": null,
+          "source_timezones_preserved": true,
+          "time_origin": null,
+          "time_origin_utc": null
+        },
+        "unmet_calendars": [],
+        "violations": [
+          {
+            "code": "missing_duration",
+            "message": "Duration is unknown; zero is not assumed.",
+            "path": "tasks[0].duration_minutes",
+            "severity": "unknown",
+            "task_id": "synthetic-awaiting-calendar"
+          },
+          {
+            "code": "missing_deadline",
+            "message": "Deadline is unknown; an earliest proposal is not a global readiness claim.",
+            "path": "tasks[0].deadline",
+            "severity": "unknown",
+            "task_id": "synthetic-awaiting-calendar"
+          }
+        ]
+      },
+      "scientific_checks": [
+        {
+          "affected_steps": [],
+          "claim": "Synthetic scientific declaration does not establish schedule feasibility.",
+          "declared_status": "pass",
+          "effective_status": "pass",
+          "expert_role": null,
+          "id": "synthetic-scientific-review",
+          "reason": "Synthetic declared review outcome only; schedule evidence is deliberately incomplete.",
+          "semantic_support": "not_independently_verified",
+          "source": {
+            "file": "synthetic-self",
+            "integrity_status": "not_checked",
+            "locator_status": "resolved",
+            "path_scope": "source_root",
+            "raw_status": "matched",
+            "registry_id": "synthetic-self",
+            "semantic_support": "not_assessed",
+            "status": "pass"
+          }
+        }
+      ],
+      "scientific_readiness": "pass",
+      "scientific_semantics_independently_verified": false,
+      "source_summary": {
+        "fail": 0,
+        "not_provided": 0,
+        "pass": 4,
+        "pending": 0
+      },
+      "status": "pending",
+      "tasks": [
+        {
+          "id": "synthetic-awaiting-calendar",
+          "source": {
+            "file": "synthetic-self",
+            "integrity_status": "not_checked",
+            "locator_status": "resolved",
+            "path_scope": "source_root",
+            "raw_status": "matched",
+            "registry_id": "synthetic-self",
+            "semantic_support": "not_assessed",
+            "status": "pass"
+          }
+        }
+      ]
+    }
+  ],
+  "case_id": "synthetic-audit-demonstration-v1",
+  "case_output_contract": false,
+  "engine_version": "plan-audit/1",
+  "example_notice": "SYNTHETIC SCHEMA DEMONSTRATION ONLY: not an actual experiment, fixed test, vendor price, free-stock offer, scientific result, or safety determination. Synthetic pre-owned consumables marked stock_role=purchase exercise procurement-shortfall diagnostics and conservative pack billing only, with no real-world free-material claim.",
+  "exit_code": 2,
+  "input_issues": [],
+  "input_path": "examples/input.json",
+  "internal_ir_contract": "weekly-skill.plan-audit/v1",
+  "issue_counts": {
+    "operational": 0,
+    "pending": 1,
+    "structural": 0,
+    "total": 5,
+    "validation": 4
+  },
+  "pending_expert_roles": [],
+  "pending_inputs": [
+    {
+      "code": "SCHEDULE_PENDING",
+      "path": "/candidates/2/tasks",
+      "scope": "machine"
+    }
+  ],
+  "ranking": {
+    "eligible_ids": [
+      "synthetic-valid"
+    ],
+    "excluded_ids": [
+      "synthetic-invalid-domain-and-cost",
+      "synthetic-pending-schedule"
+    ],
+    "method": "Exact Pareto non-domination over eligible candidates only; no weights, fill-down, or zero substitution.",
+    "pareto_ids": [
+      "synthetic-valid"
+    ],
+    "priority": [
+      {
+        "direction": "min",
+        "metric": "synthetic_duration"
+      }
+    ],
+    "ranked_values": {
+      "synthetic-valid": {
+        "synthetic_duration": "10"
+      }
+    },
+    "status": "pass",
+    "unrankable_ids": []
+  },
+  "ranking_issues": [],
+  "schema_version": "weekly-skill.plan-audit/v1.report",
+  "scientific_or_safety_approval": false,
+  "search": {
+    "domain_ids": [],
+    "global_optimality_proven": false,
+    "infeasibility_proven": false,
+    "reason": "not_requested",
+    "requested": false,
+    "scope": "finite parameter-domain coverage only; never a proof of scientific global optimality or infeasibility",
+    "search_complete": false,
+    "search_limit": 100000,
+    "truncated": false
+  },
+  "search_issues": [],
+  "status": "fail",
+  "validation_scope": "Machine checks cover structure, exact rational arithmetic, finite-domain membership/coverage, declared source locator and file-integrity facts, and the schedule auditor's returned result only. Source locators, raw-value matches, and hashes do not prove semantic source support; scientific meaning, source adequacy, feasibility outside the implemented constraints, safety, ethics, and execution approval still require the agent and qualified domain experts. Scientific readiness is a rollup of supplied review declarations, never scientific_or_safety_approval."
+}

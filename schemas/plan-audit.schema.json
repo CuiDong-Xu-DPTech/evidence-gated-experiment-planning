@@ -1,0 +1,309 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "weekly-skill.plan-audit/v1",
+  "title": "Normalized plan-audit intermediate representation",
+  "description": "Internal audit input only. This is NOT the organizer case output contract and does not describe result.json. Numeric measurements, quantities, prices, domains, budgets, and ranked metrics use base-10 numeric strings for exact Fraction arithmetic; JSON numeric strings are preferred over binary floating-point numbers. Categorical parameter values and domains are literal strings. Missing evidence or unavailable values remain pending/unknown rather than becoming zero. Source checks establish locator and integrity facts only, never semantic scientific support.",
+  "type": "object",
+  "required": ["schema_version", "case_id", "candidates"],
+  "properties": {
+    "schema_version": {"const": "weekly-skill.plan-audit/v1"},
+    "case_id": {"type": "string", "minLength": 1},
+    "example_notice": {
+      "type": "string",
+      "description": "Required by convention on bundled examples to mark them synthetic, not an actual experiment, fixed test, price, or result."
+    },
+    "source_registry": {
+      "type": "object",
+      "additionalProperties": {"$ref": "#/$defs/artifact"}
+    },
+    "priority": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/priority"}
+    },
+    "candidates": {
+      "type": "array",
+      "minItems": 1
+    },
+    "defaults": {
+      "$ref": "#/$defs/partialCandidate",
+      "description": "Optional compact shared candidate fields. The five named arrays merge by stable entry key; every other candidate-owned field replaces the same default field. The auditor expands this mechanically before its existing checks."
+    }
+  },
+  "allOf": [
+    {
+      "if": {"required": ["defaults"]},
+      "then": {
+        "properties": {
+          "candidates": {"items": {"$ref": "#/$defs/compactCandidate"}}
+        }
+      },
+      "else": {
+        "properties": {
+          "candidates": {"items": {"$ref": "#/$defs/candidate"}}
+        }
+      }
+    }
+  ],
+  "additionalProperties": false,
+  "$defs": {
+    "numericString": {
+      "type": "string",
+      "pattern": "^[+-]?(?:[0-9]+(?:\\.[0-9]*)?|\\.[0-9]+)(?:[eE][+-]?[0-9]+)?$",
+      "description": "Finite base-10 decimal or scientific notation; NaN, Infinity, fractions such as 1/3, and booleans are not accepted."
+    },
+    "nonEmptyString": {"type": "string", "minLength": 1},
+    "artifact": {
+      "type": "object",
+      "required": ["file"],
+      "properties": {
+        "file": {"type": "string", "minLength": 1, "description": "Actual local path, relative to --source-root when relative; never fetched from a network."},
+        "sha256": {"type": "string", "pattern": "^[0-9a-fA-F]{64}$"},
+        "media_type": {"type": "string", "minLength": 1},
+        "path": {"type": "string", "minLength": 1, "description": "Optional actual path override when file is a display name."}
+      },
+      "additionalProperties": false
+    },
+    "source": {
+      "type": "object",
+      "properties": {
+        "file": {"type": "string", "minLength": 1, "description": "A source_registry key, /input/case.json, or a legitimate local path. No URLs are fetched."},
+        "pointer": {"type": "string", "description": "RFC 6901 JSON Pointer into a resolved JSON artifact."},
+        "raw": {"description": "Expected original JSON literal at pointer, retaining its original JSON type. It is never a normalized numeric field: source JSON integer 6 must remain raw:6, while normalized quantities/parameters use numeric strings such as \"6\". Comparison is type-sensitive; numeric strings are not silently coerced to numbers."},
+        "quote": {"type": "string", "description": "Short source excerpt for review; its presence is not proof of support."},
+        "page": {"type": "integer", "minimum": 1},
+        "locator": {"type": "string", "minLength": 1, "description": "PDF figure/table/section or other human-review locator."},
+        "unit": {"type": "string", "minLength": 1, "description": "Optional declared source unit, compared literally with normalization/output units."}
+      },
+      "additionalProperties": false
+    },
+    "domain": {
+      "oneOf": [
+        {
+          "type": "array",
+          "minItems": 1,
+          "items": {"type": "string", "minLength": 1},
+          "description": "Explicit finite allowed values. Each entry is independently numeric or categorical; mixed domains retain per-entry types, numeric entries compare as exact rationals, and categorical entries compare as literal strings."
+        },
+        {
+          "type": "object",
+          "required": ["min", "max", "step"],
+          "properties": {
+            "min": {"$ref": "#/$defs/numericString"},
+            "max": {"$ref": "#/$defs/numericString"},
+            "step": {"$ref": "#/$defs/numericString"},
+            "origin": {"$ref": "#/$defs/numericString"},
+            "unit": {"type": "string", "minLength": 1}
+          },
+          "additionalProperties": false,
+          "description": "Closed interval intersected with origin + k*step for integer k; step must be strictly positive."
+        }
+      ]
+    },
+    "normalization": {
+      "type": "object",
+      "required": ["factor", "unit", "source"],
+      "properties": {
+        "factor": {"$ref": "#/$defs/numericString", "description": "Exact multiplier: normalized value = source.raw * factor."},
+        "unit": {"type": "string", "minLength": 1, "description": "Result unit; must equal parameter.unit literally."},
+        "source": {"$ref": "#/$defs/source", "description": "Provenance of the conversion factor."}
+      },
+      "additionalProperties": false
+    },
+    "parameter": {
+      "type": "object",
+      "required": ["name", "value", "unit", "domain", "source"],
+      "properties": {
+        "name": {"$ref": "#/$defs/nonEmptyString"},
+        "value": {"type": "string", "minLength": 1},
+        "unit": {"type": "string", "minLength": 1},
+        "domain": {"$ref": "#/$defs/domain"},
+        "source": {"$ref": "#/$defs/source"},
+        "normalization": {"$ref": "#/$defs/normalization"}
+      },
+      "additionalProperties": false
+    },
+    "costItem": {
+      "type": "object",
+      "required": ["id", "quantity", "unit", "currency", "source"],
+      "properties": {
+        "id": {"$ref": "#/$defs/nonEmptyString"},
+        "quantity": {"$ref": "#/$defs/numericString", "description": "Total required by this candidate, including its already-designed controls, QC, and replicates; the auditor never infers runs."},
+        "unit": {"type": "string", "minLength": 1},
+        "stock_role": {
+          "type": "string",
+          "enum": ["capacity", "purchase", "none"],
+          "description": "Source-driven stock semantics, never guessed from labels. capacity means stock_available is a permitted-use limit and never offsets consumption billing; quantity<=capacity is checked independently and unknown capacity leaves availability pending even when gross price is complete. purchase means explicit pre-owned stock offsets procurement need: shortfall=max(0,quantity-stock), packs=ceil(shortfall/pack_size), billed=packs*pack_size, and item_cost=billed*unit_price_minor. none is only for a case that explicitly defines gross consumption pricing with no stock rule for this item; it charges full quantity without declaring resource availability. none with stock_available is an error. Omitting stock_role preserves the legacy stock-dependent shortfall algorithm and pending unknown stock."
+        },
+        "stock_available": {"$ref": "#/$defs/numericString", "description": "Normalized decimal string interpreted only according to stock_role. The corresponding original JSON literal and type stay separately in source.raw."},
+        "pack_size": {"$ref": "#/$defs/numericString", "description": "Positive exact package/procurement increment. Capacity rounds quantity, purchase rounds shortfall, and legacy behavior is unchanged when stock_role is omitted."},
+        "unit_price_minor": {"$ref": "#/$defs/numericString", "description": "Normalized source price at the declared billing unit rate. Cost is always billed_quantity multiplied by this price. Pack procurement computes billed from exact pack rounding of shortfall; shortfall itself is never used as a lower-priced alternative. Source price-unit ambiguity remains marked by pending/source review rather than exploited to choose a cheaper plan."},
+        "currency": {"type": "string", "minLength": 1},
+        "declared_total_minor": {"$ref": "#/$defs/numericString"},
+        "fixed_cost_minor": {"$ref": "#/$defs/numericString", "description": "Separate fixed charge, added once to the same-currency candidate total."},
+        "source": {"$ref": "#/$defs/source"}
+      },
+      "additionalProperties": false
+    },
+    "task": {
+      "type": "object",
+      "required": ["id"],
+      "properties": {
+        "id": {"$ref": "#/$defs/nonEmptyString"},
+        "source": {"$ref": "#/$defs/source"}
+      },
+      "additionalProperties": true,
+      "description": "Schedule-owned fields remain intact and are passed to schedule.audit_schedule. Missing source or schedule evidence cannot become a skipped pass."
+    },
+    "scientificCheck": {
+      "type": "object",
+      "required": ["id", "status", "claim", "reason"],
+      "properties": {
+        "id": {"$ref": "#/$defs/nonEmptyString"},
+        "status": {"enum": ["pass", "fail", "unknown", "not_applicable"]},
+        "claim": {"type": "string"},
+        "source": {"$ref": "#/$defs/source"},
+        "reason": {"type": "string"},
+        "affected_steps": {"type": "array", "items": {"type": "string"}},
+        "expert_role": {"type": "string", "minLength": 1}
+      },
+      "additionalProperties": false,
+      "description": "Agent/expert scientific review declarations, not generic machine tests or safety approval. A declared pass without a claim or usable source locator is downgraded to pending."
+    },
+    "priority": {
+      "type": "object",
+      "required": ["metric", "direction"],
+      "properties": {
+        "metric": {"$ref": "#/$defs/nonEmptyString"},
+        "direction": {"enum": ["min", "max"]}
+      },
+      "additionalProperties": false
+    },
+    "candidate": {
+      "type": "object",
+      "required": ["candidate_id", "parameters", "cost_items", "tasks", "resource_calendars", "scientific_checks"],
+      "properties": {
+        "candidate_id": {"$ref": "#/$defs/nonEmptyString"},
+        "parent_id": {"type": ["string", "null"], "minLength": 1},
+        "parameters": {"type": "array", "items": {"$ref": "#/$defs/parameter"}},
+        "cost_items": {"type": "array", "items": {"$ref": "#/$defs/costItem"}},
+        "tasks": {"type": "array", "items": {"$ref": "#/$defs/task"}},
+        "resource_calendars": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {"source": {"$ref": "#/$defs/source"}},
+            "description": "Calendar fields remain scheduler-owned. An optional source receives the same locator/raw/integrity audit as other sources; it does not prove real availability."
+          }
+        },
+        "scientific_checks": {"type": "array", "items": {"$ref": "#/$defs/scientificCheck"}},
+        "budget_minor": {"$ref": "#/$defs/numericString"},
+        "budget_currency": {"type": "string", "minLength": 1, "description": "Optional disambiguator. With multiple cost currencies, a budget without this field remains pending."},
+        "horizon_minutes": {"$ref": "#/$defs/numericString", "description": "Latest permitted task-end offset from the common planning-origin minute zero. Checked exactly as every numeric task end <= horizon; absolute ISO timestamps use explicit deadlines instead."},
+        "time_origin": {"type": "string", "minLength": 1, "description": "Optional scheduler-owned ISO time origin. The schedule parser still requires an explicit timezone and never invents a conversion."},
+        "metrics": {"type": "object", "additionalProperties": {"type": "string"}},
+        "declared_total_minor": {
+          "oneOf": [
+            {"$ref": "#/$defs/numericString"},
+            {"type": "object", "additionalProperties": {"$ref": "#/$defs/numericString"}}
+          ],
+          "description": "Optional candidate total including fixed charges. A scalar is comparable only with one cost currency or explicit budget_currency."
+        },
+        "declared_totals_minor": {
+          "type": "object",
+          "additionalProperties": {"$ref": "#/$defs/numericString"},
+          "description": "Currency-keyed candidate totals including fixed charges; comparable only when all item costs in that currency are known."
+        }
+      },
+      "additionalProperties": false
+    },
+    "parameterPatch": {
+      "type": "object",
+      "required": ["name"],
+      "properties": {
+        "name": {"$ref": "#/$defs/parameter/properties/name"},
+        "value": {"$ref": "#/$defs/parameter/properties/value"},
+        "unit": {"$ref": "#/$defs/parameter/properties/unit"},
+        "domain": {"$ref": "#/$defs/parameter/properties/domain"},
+        "source": {"$ref": "#/$defs/parameter/properties/source"},
+        "normalization": {"$ref": "#/$defs/parameter/properties/normalization"}
+      },
+      "additionalProperties": false
+    },
+    "costItemPatch": {
+      "type": "object",
+      "required": ["id"],
+      "properties": {
+        "id": {"$ref": "#/$defs/costItem/properties/id"},
+        "quantity": {"$ref": "#/$defs/costItem/properties/quantity"},
+        "unit": {"$ref": "#/$defs/costItem/properties/unit"},
+        "stock_role": {"$ref": "#/$defs/costItem/properties/stock_role"},
+        "stock_available": {"$ref": "#/$defs/costItem/properties/stock_available"},
+        "pack_size": {"$ref": "#/$defs/costItem/properties/pack_size"},
+        "unit_price_minor": {"$ref": "#/$defs/costItem/properties/unit_price_minor"},
+        "currency": {"$ref": "#/$defs/costItem/properties/currency"},
+        "declared_total_minor": {"$ref": "#/$defs/costItem/properties/declared_total_minor"},
+        "fixed_cost_minor": {"$ref": "#/$defs/costItem/properties/fixed_cost_minor"},
+        "source": {"$ref": "#/$defs/costItem/properties/source"}
+      },
+      "additionalProperties": false
+    },
+    "scientificCheckPatch": {
+      "type": "object",
+      "required": ["id"],
+      "properties": {
+        "id": {"$ref": "#/$defs/scientificCheck/properties/id"},
+        "status": {"$ref": "#/$defs/scientificCheck/properties/status"},
+        "claim": {"$ref": "#/$defs/scientificCheck/properties/claim"},
+        "source": {"$ref": "#/$defs/scientificCheck/properties/source"},
+        "reason": {"$ref": "#/$defs/scientificCheck/properties/reason"},
+        "affected_steps": {"$ref": "#/$defs/scientificCheck/properties/affected_steps"},
+        "expert_role": {"$ref": "#/$defs/scientificCheck/properties/expert_role"}
+      },
+      "additionalProperties": false
+    },
+    "calendarPatch": {
+      "type": "object",
+      "required": ["resource_id"],
+      "properties": {
+        "resource_id": {"$ref": "#/$defs/nonEmptyString"},
+        "source": {"$ref": "#/$defs/source"}
+      },
+      "additionalProperties": true,
+      "description": "A keyed calendar default or patch. Other scheduler-owned fields remain intact; capacity and available_intervals changes require a candidate-owned source during defaults expansion."
+    },
+    "partialCandidate": {
+      "type": "object",
+      "properties": {
+        "candidate_id": {"$ref": "#/$defs/nonEmptyString"},
+        "parent_id": {"type": ["string", "null"], "minLength": 1},
+        "parameters": {"type": "array", "items": {"$ref": "#/$defs/parameterPatch"}},
+        "cost_items": {"type": "array", "items": {"$ref": "#/$defs/costItemPatch"}},
+        "tasks": {"type": "array", "items": {"$ref": "#/$defs/task"}},
+        "resource_calendars": {"type": "array", "items": {"$ref": "#/$defs/calendarPatch"}},
+        "scientific_checks": {"type": "array", "items": {"$ref": "#/$defs/scientificCheckPatch"}},
+        "budget_minor": {"$ref": "#/$defs/numericString"},
+        "budget_currency": {"type": "string", "minLength": 1},
+        "horizon_minutes": {"$ref": "#/$defs/numericString"},
+        "time_origin": {"type": "string", "minLength": 1},
+        "metrics": {"type": "object", "additionalProperties": {"type": "string"}},
+        "declared_total_minor": {
+          "oneOf": [
+            {"$ref": "#/$defs/numericString"},
+            {"type": "object", "additionalProperties": {"$ref": "#/$defs/numericString"}}
+          ]
+        },
+        "declared_totals_minor": {
+          "type": "object",
+          "additionalProperties": {"$ref": "#/$defs/numericString"}
+        }
+      },
+      "additionalProperties": false,
+      "description": "Candidate defaults or a compact candidate patch. Stable entry keys are required; the expanded candidate is still checked by the auditor for all required fields."
+    },
+    "compactCandidate": {
+      "allOf": [{"$ref": "#/$defs/partialCandidate"}],
+      "required": ["candidate_id"],
+      "description": "Used only when top-level defaults is present. Explicit null fields, including parent_id:null, are retained and override inherited values."
+    }
+  }
+}

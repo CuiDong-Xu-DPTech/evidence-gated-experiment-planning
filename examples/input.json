@@ -1,0 +1,206 @@
+{
+  "schema_version": "weekly-skill.plan-audit/v1",
+  "case_id": "synthetic-audit-demonstration-v1",
+  "example_notice": "SYNTHETIC SCHEMA DEMONSTRATION ONLY: not an actual experiment, fixed test, vendor price, free-stock offer, scientific result, or safety determination. Synthetic pre-owned consumables marked stock_role=purchase exercise procurement-shortfall diagnostics and conservative pack billing only, with no real-world free-material claim.",
+  "source_registry": {
+    "synthetic-self": {
+      "file": "input.json",
+      "media_type": "application/json"
+    }
+  },
+  "priority": [
+    {
+      "metric": "synthetic_duration",
+      "direction": "min"
+    }
+  ],
+  "candidates": [
+    {
+      "candidate_id": "synthetic-valid",
+      "parameters": [
+        {
+          "name": "synthetic_level",
+          "value": "2",
+          "unit": "synthetic_unit",
+          "domain": ["1", "2", "3"],
+          "source": {
+            "file": "synthetic-self",
+            "pointer": "/candidates/0/parameters/0/value",
+            "raw": "2"
+          }
+        }
+      ],
+      "cost_items": [
+        {
+          "id": "synthetic-packed-consumable",
+          "quantity": "5",
+          "unit": "synthetic_piece",
+          "stock_role": "purchase",
+          "stock_available": "1",
+          "pack_size": "2",
+          "unit_price_minor": "6",
+          "currency": "XCR",
+          "declared_total_minor": "24",
+          "fixed_cost_minor": "2",
+          "source": {
+            "file": "synthetic-self",
+            "pointer": "/candidates/0/cost_items/0/unit_price_minor",
+            "raw": "6"
+          }
+        }
+      ],
+      "tasks": [],
+      "resource_calendars": [],
+      "scientific_checks": [
+        {
+          "id": "synthetic-scientific-review",
+          "status": "pass",
+          "claim": "Synthetic review assertion used only to demonstrate schema flow.",
+          "reason": "Synthetic declared review outcome; semantic support is not independently machine-verified.",
+          "source": {
+            "file": "synthetic-self",
+            "pointer": "/candidates/0/scientific_checks/0/claim",
+            "raw": "Synthetic review assertion used only to demonstrate schema flow."
+          }
+        }
+      ],
+      "budget_minor": "26",
+      "budget_currency": "XCR",
+      "horizon_minutes": "10",
+      "metrics": {
+        "synthetic_duration": "10"
+      },
+      "declared_totals_minor": {
+        "XCR": "26"
+      }
+    },
+    {
+      "candidate_id": "synthetic-invalid-domain-and-cost",
+      "parent_id": "synthetic-valid",
+      "parameters": [
+        {
+          "name": "synthetic_level",
+          "value": "4",
+          "unit": "synthetic_unit",
+          "domain": ["1", "2", "3"],
+          "source": {
+            "file": "synthetic-self",
+            "pointer": "/candidates/1/parameters/0/value",
+            "raw": "4"
+          }
+        }
+      ],
+      "cost_items": [
+        {
+          "id": "synthetic-packed-consumable",
+          "quantity": "5",
+          "unit": "synthetic_piece",
+          "stock_role": "purchase",
+          "stock_available": "1",
+          "pack_size": "2",
+          "unit_price_minor": "6",
+          "currency": "XCR",
+          "declared_total_minor": "20",
+          "fixed_cost_minor": "2",
+          "source": {
+            "file": "synthetic-self",
+            "pointer": "/candidates/1/cost_items/0/unit_price_minor",
+            "raw": "6"
+          }
+        }
+      ],
+      "tasks": [],
+      "resource_calendars": [],
+      "scientific_checks": [
+        {
+          "id": "synthetic-scientific-review",
+          "status": "pass",
+          "claim": "Synthetic review assertion; this does not compensate arithmetic or domain failures.",
+          "reason": "Synthetic declared review outcome only.",
+          "source": {
+            "file": "synthetic-self",
+            "pointer": "/candidates/1/scientific_checks/0/claim",
+            "raw": "Synthetic review assertion; this does not compensate arithmetic or domain failures."
+          }
+        }
+      ],
+      "budget_minor": "20",
+      "budget_currency": "XCR",
+      "horizon_minutes": "8",
+      "metrics": {
+        "synthetic_duration": "8"
+      },
+      "declared_totals_minor": {
+        "XCR": "22"
+      }
+    },
+    {
+      "candidate_id": "synthetic-pending-schedule",
+      "parent_id": "synthetic-valid",
+      "parameters": [
+        {
+          "name": "synthetic_level",
+          "value": "3",
+          "unit": "synthetic_unit",
+          "domain": ["1", "2", "3"],
+          "source": {
+            "file": "synthetic-self",
+            "pointer": "/candidates/2/parameters/0/value",
+            "raw": "3"
+          }
+        }
+      ],
+      "cost_items": [
+        {
+          "id": "synthetic-in-stock-consumable",
+          "quantity": "2",
+          "unit": "synthetic_piece",
+          "stock_role": "purchase",
+          "stock_available": "2",
+          "unit_price_minor": "8",
+          "currency": "XCR",
+          "declared_total_minor": "0",
+          "fixed_cost_minor": "0",
+          "source": {
+            "file": "synthetic-self",
+            "pointer": "/candidates/2/cost_items/0/unit_price_minor",
+            "raw": "8"
+          }
+        }
+      ],
+      "tasks": [
+        {
+          "id": "synthetic-awaiting-calendar",
+          "source": {
+            "file": "synthetic-self",
+            "pointer": "/candidates/2/tasks/0/id",
+            "raw": "synthetic-awaiting-calendar"
+          }
+        }
+      ],
+      "resource_calendars": [],
+      "scientific_checks": [
+        {
+          "id": "synthetic-scientific-review",
+          "status": "pass",
+          "claim": "Synthetic scientific declaration does not establish schedule feasibility.",
+          "reason": "Synthetic declared review outcome only; schedule evidence is deliberately incomplete.",
+          "source": {
+            "file": "synthetic-self",
+            "pointer": "/candidates/2/scientific_checks/0/claim",
+            "raw": "Synthetic scientific declaration does not establish schedule feasibility."
+          }
+        }
+      ],
+      "budget_minor": "0",
+      "budget_currency": "XCR",
+      "horizon_minutes": "7",
+      "metrics": {
+        "synthetic_duration": "7"
+      },
+      "declared_totals_minor": {
+        "XCR": "0"
+      }
+    }
+  ]
+}

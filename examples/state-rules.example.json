@@ -1,0 +1,25 @@
+{
+  "example_notice": "SYNTHETIC RULE INTERFACE ONLY: these paths demonstrate declarations, not real case answers, scientific validity, historical facts, resource availability, or required universal rule names.",
+  "rules": [
+    {
+      "id": "synthetic-current-resource-verdict",
+      "paths": [
+        "/comparison/candidate_matrix/$ID/verdict",
+        "/candidates/$ID/validation/verdict",
+        "/validation_records/$ID/verdict"
+      ]
+    },
+    {
+      "id": "synthetic-explicit-before-after-scopes",
+      "paths": [
+        "/history/as_written/resource_pass",
+        "/history/after_resource_repair/resource_pass"
+      ],
+      "scope_paths": [
+        "/history/as_written/scope",
+        "/history/after_resource_repair/scope"
+      ],
+      "allow_different_scopes": true
+    }
+  ]
+}
